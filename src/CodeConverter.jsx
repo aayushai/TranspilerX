@@ -58,7 +58,7 @@ const CodeConverter = () => {
          />
       ) : (
         <>
-          <h1 className='text-3xl font-bold text-center p-2'>Convert your Code</h1>
+          <h1 className='text-3xl font-bold text-center p-2'>Input Your Code</h1>
           <div className='flex w-[80%] space-x-4'> 
             <div className="flex w-[50%] flex-col p-4 shadow-md rounded-lg bg-white"> 
               <label className="text-black font-bold mb-2">Input Language</label>
