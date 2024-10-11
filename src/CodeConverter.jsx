@@ -53,7 +53,7 @@ const CodeConverter = () => {
     <div className="flex flex-col items-center justify-center min-h-screen gap-6">
       {/* Loading Spinner */}
       {loading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center  backdrop-blur-sm transition-opacity duration-300">
+        <div className="absolute inset-0 z-50 flex items-center justify-center  backdrop-blur-sm transition-all duration-300">
           <CircleLoader
             color="purple"
             loading={loading}
