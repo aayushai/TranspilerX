@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Editor } from "@monaco-editor/react";
 import axios from "axios";
-import CircleLoader from "react-spinners/CircleLoader";
+import ClipLoader from "react-spinners/ClipLoader";  // Keeping ClipLoader
 
 const CodeConverter = () => {
     const [inputCode, setInputCode] = useState("");
@@ -54,7 +54,7 @@ const CodeConverter = () => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen space-y-6">
             {loading ? (
-                <CircleLoader
+                <ClipLoader
                     color="purple"
                     loading={loading}
                     size={150}
