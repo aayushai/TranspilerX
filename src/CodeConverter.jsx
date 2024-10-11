@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Editor } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
@@ -9,6 +9,34 @@ const CodeConverter = () => {
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
+
+  const defaultCodes = {
+    python: `print("Hello World")`,
+    javascript: `console.log("Hello World")`,
+    java: `System.out.println("Hello World");`,
+    cpp: `#include <iostream>
+  int main() {
+    std::cout << "Hello World";
+  }`,
+    c: `#include <stdio.h>
+  int main() {
+    printf("Hello World");
+    return 0;
+  }`,
+    csharp: `Console.WriteLine("Hello World");`,
+    ruby: `puts "Hello World"`,
+    typescript: `console.log("Hello World")`,
+    rust: `fn main() {
+    println!("Hello World");
+  }`,
+    swift: `print("Hello World")`
+  };
+  
+
+  // Set default input code based on the selected language
+  useEffect(() => {
+    setInputCode(defaultCodes[inputLang]);
+  }, [inputLang]);
 
   const handleConvert = async () => {
     try {
