@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Editor } from '@monaco-editor/react';
 import axios from 'axios';
-import CircleLoader from "react-spinners/CircleLoader";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
@@ -49,14 +49,7 @@ const CodeConverter = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen space-y-6">
-      {loading ? (
-        <CircleLoader
-        color='purple'
-        loading={loading}
-        size={150}
-        aria-label="Loading Spinner"
-         />
-      ) : (
+      { (
         <>
           <h1 className='text-3xl font-bold text-center p-2'>Input Your Code</h1>
           <div className='flex w-[80%] space-x-4'> 
@@ -106,16 +99,23 @@ const CodeConverter = () => {
                 <option value="swift">Swift</option>
               </select>
 
-              <Editor
-                height="400px"
-                defaultLanguage={outputLang}
-                language={outputLang}
-                theme="vs-dark"
-                value={outputCode}
-                options={{
-                  readOnly: true
-                }}
-              />
+              <div className="relative h-[400px]">
+                <Editor
+                  height="100%"
+                  defaultLanguage={outputLang}
+                  language={outputLang}
+                  theme="vs-dark"
+                  value={outputCode}
+                  options={{
+                    readOnly: true
+                  }}
+                />
+                {loading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75">
+                    <ClipLoader color="#ffffff" loading={true} size={50} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
