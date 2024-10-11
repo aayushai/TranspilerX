@@ -3,10 +3,56 @@ import { Editor } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
 
+const getDefaultCode = (lang) => { // Move this function above the useState hooks
+  switch (lang) {
+    case 'javascript':
+      return `console.log("Hello, World!");`;
+    case 'java':
+      return `public class HelloWorld {
+        public static void main(String[] args) {
+          System.out.println("Hello, World!");
+        }
+      }`;
+    case 'cpp':
+      return `#include <iostream>
+      int main() {
+        std::cout << "Hello, World!";
+        return 0;
+      }`;
+    case 'c':
+      return `#include <stdio.h>
+      int main() {
+        printf("Hello, World!");
+        return 0;
+      }`;
+    case 'python':
+      return `print("Hello, World!")`;
+    case 'csharp':
+      return `using System;
+      class Program {
+        static void Main() {
+          Console.WriteLine("Hello, World!");
+        }
+      }`;
+    case 'ruby':
+      return `puts "Hello, World!"`;
+    case 'typescript':
+      return `console.log("Hello, World!");`;
+    case 'rust':
+      return `fn main() {
+        println!("Hello, World!");
+      }`;
+    case 'swift':
+      return `print("Hello, World!")`;
+    default:
+      return '';
+  }
+};
+
 const CodeConverter = () => {
-  const [inputCode, setInputCode] = useState('');
-  const [outputCode, setOutputCode] = useState('');
   const [inputLang, setInputLang] = useState('python');
+  const [inputCode, setInputCode] = useState(getDefaultCode(inputLang)); // Initialize with default code
+  const [outputCode, setOutputCode] = useState('');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
 
@@ -47,6 +93,11 @@ const CodeConverter = () => {
     }
   };
 
+  const handleLangChange = (lang) => {
+    setInputLang(lang);
+    setInputCode(getDefaultCode(lang)); // Update inputCode when language changes
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen space-y-6">
       { (
@@ -58,7 +109,7 @@ const CodeConverter = () => {
               <select 
                 className="bg-gray-200 text-black p-2 mb-4 rounded-md"
                 value={inputLang}
-                onChange={(e) => setInputLang(e.target.value)}>
+                onChange={(e) => handleLangChange(e.target.value)}>
                 <option value="javascript">JavaScript</option>
                 <option value="java">Java</option>
                 <option value="cpp">C++</option>
