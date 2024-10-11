@@ -53,7 +53,7 @@ const CodeConverter = () => {
         <CircleLoader
         color='purple'
         loading={loading}
-        size={150}
+        size={100}
         aria-label="Loading Spinner"
          />
       ) : (
