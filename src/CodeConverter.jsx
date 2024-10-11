@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Editor } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
+import { FaSun, FaMoon } from 'react-icons/fa'; // Importing icons from react-icons
 
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
@@ -9,6 +10,7 @@ const CodeConverter = () => {
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true); // State for theme
 
   const defaultCodes = {
     python: `print("Hello World")`,
@@ -75,8 +77,18 @@ const CodeConverter = () => {
     }
   };
 
+  const toggleTheme = () => {
+    setIsDarkMode(prevMode => !prevMode);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen space-y-6">
+    <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+      <button 
+        className={`absolute top-4 right-4 p-2 rounded-md ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} transition m-2`} 
+        onClick={toggleTheme}
+      >
+        {isDarkMode ? <FaSun className="w-6 h-6 text-yellow-500" /> : <FaMoon className="w-6 h-6 text-gray-800" />} 
+      </button>
       { (
         <>
           <h1 className='text-3xl font-bold text-center p-2'>Input Your Code</h1>
@@ -132,7 +144,7 @@ const CodeConverter = () => {
                   height="100%"
                   defaultLanguage={outputLang}
                   language={outputLang}
-                  theme="vs-dark"
+                  theme="vs-light"
                   value={outputCode}
                   options={{
                     readOnly: true
