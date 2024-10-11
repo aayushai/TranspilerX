@@ -144,7 +144,7 @@ const CodeConverter = () => {
                   height="100%"
                   defaultLanguage={outputLang}
                   language={outputLang}
-                  theme="vs-light"
+                  theme="vs-dark"
                   value={outputCode}
                   options={{
                     readOnly: true
