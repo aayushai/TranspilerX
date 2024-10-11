@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Editor } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
+import "./CodeConverter.css";
 
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
@@ -9,6 +10,8 @@ const CodeConverter = () => {
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState('vs-dark');
+  const [fabExpanded, setFabExpanded] = useState(false);
 
   const defaultCodes = {
     python: `print("Hello World")`,
@@ -74,6 +77,17 @@ const CodeConverter = () => {
       setLoading(false);  
     }
   };
+  const handleClearEditor = () => {
+    setInputCode(''); 
+    setOutputCode('');
+  };
+
+  const handleThemeToggle = () => {
+    setTheme(theme === 'vs-dark' ? 'vs-light' : 'vs-dark');
+  };
+  const toggleFab = () => {
+    setFabExpanded(!fabExpanded); // Toggles the mobile FAB actions
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen space-y-6">
@@ -103,7 +117,7 @@ const CodeConverter = () => {
                 height="400px"
                 defaultLanguage={inputLang}
                 language={inputLang}
-                theme="vs-dark"
+                theme={theme}
                 value={inputCode}
                 onChange={(value) => setInputCode(value)}
               />
@@ -157,6 +171,24 @@ const CodeConverter = () => {
           </div>
         </>
       )}
+      <div className="fab-container fab-mobile">
+        <button className="fab-button" onClick={toggleFab}>
+          {fabExpanded ? '❌' : '⚙️'} 
+        </button>
+
+        {fabExpanded && (
+          <div className="fab-expanded">
+            <button className="fab-button" onClick={handleThemeToggle}>
+              {theme === 'vs-dark' ? '🌞' : '🌙'} 
+            </button>
+
+            {/* Clear Code Button */}
+            <button className="fab-button" onClick={handleClearEditor}>
+             🗑️ 
+            </button>
+            </div>
+          )}
+      </div>
     </div>
   );
 };
