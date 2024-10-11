@@ -121,7 +121,7 @@ const CodeConverter = () => {
 
           <div className="w-full flex justify-center"> 
             <button 
-              className={`px-6 py-2 ${loading ? 'bg-gray-400' : 'bg-transparent'} border text-white font-semibold rounded-md`} 
+              className={`px-6 py-2 mb-3 md:mb-0 ${loading ? 'bg-gray-400' : 'bg-transparent'} border text-white font-semibold rounded-md`} 
               onClick={handleConvert} 
               disabled={loading}>
               {loading ? 'Converting...' : 'Convert'}
