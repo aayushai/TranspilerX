@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Editor } from '@monaco-editor/react';
+import { Editor, loader } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
-import { FaMoon, FaSun } from 'react-icons/fa'; // Importing icons for theme toggle
+import { FaMoon, FaSun } from 'react-icons/fa'; 
 
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
@@ -10,7 +10,7 @@ const CodeConverter = () => {
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // New state for dark mode
+  const [isDarkMode, setIsDarkMode] = useState(false); 
 
   const defaultCodes = {
     python: `print("Hello World")`,
@@ -33,12 +33,28 @@ const CodeConverter = () => {
   }`,
     swift: `print("Hello World")`
   };
-  
 
-  // Set default input code based on the selected language
   useEffect(() => {
     setInputCode(defaultCodes[inputLang]);
   }, [inputLang]);
+
+  useEffect(() => {
+    loader.init().then(monaco => {
+      monaco.editor.defineTheme('off-white-theme', {
+        base: 'vs', // light base
+      inherit: true, 
+      rules: [{ background: 'fafafa' }], 
+      colors: {
+        'editor.background': '#FDF6F5', 
+        'editor.foreground': '#000000', 
+        'editor.lineHighlightBackground': '#f0f0f0', 
+        'editorCursor.foreground': '#000000', 
+        'editorIndentGuide.background': '#e8e8e8', 
+        'editorLineNumber.foreground': '#b3b3b3', 
+        }
+      });
+    });
+  }, []);
 
   const handleConvert = async () => {
     try {
@@ -112,7 +128,7 @@ const CodeConverter = () => {
                 height="400px"
                 defaultLanguage={inputLang}
                 language={inputLang}
-                theme={isDarkMode ? "vs-dark" : "vs-light"} // Change editor theme based on mode
+                theme={isDarkMode ? "vs-dark" : "off-white-theme"}
                 value={inputCode}
                 onChange={(value) => setInputCode(value)}
               />
@@ -141,7 +157,7 @@ const CodeConverter = () => {
                   height="100%"
                   defaultLanguage={outputLang}
                   language={outputLang}
-                  theme={isDarkMode ? "vs-dark" : "vs-light"} // Change editor theme based on mode
+                  theme={isDarkMode ? "vs-dark" : "off-white-theme"} 
                   value={outputCode}
                   options={{
                     readOnly: true
@@ -149,7 +165,7 @@ const CodeConverter = () => {
                 />
                 {loading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75">
-                    <ClipLoader color={isDarkMode ? "#ffffff" : "#000000"} loading={true} size={50} /> {/* Change loader color */}
+                    <ClipLoader color={isDarkMode ? "#ffffff" : "#000000"} loading={true} size={50} />
                   </div>
                 )}
               </div>
