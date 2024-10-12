@@ -49,7 +49,7 @@ To run the project locally, follow these steps:
 
 
 ## Contributing
-Contributions are welcome! Please feel free to submit a pull request or open an issue for any enhancements or bug fixes.
+Contributions are welcome! Please feel free to submit a pull request or open an issue for any enhancements or bug fixes. Also, any further ideas regarding website enhancement and any addition of features are welcome.
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
