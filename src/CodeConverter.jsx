@@ -2,13 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Editor } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
+import Prism from 'prismjs';
+import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-c';
+import 'prismjs/components/prism-cpp'; // must load after prism-c
+import 'prismjs/components/prism-csharp';
+import 'prismjs/components/prism-ruby';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-rust';
+import 'prismjs/components/prism-swift';
 
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
-  const [outputCode, setOutputCode] = useState('');
+  const [outputCode, setOutputCode] = useState('Click Convert');
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
+  const [highlightedInputCode, setHighlightedInputCode] = useState('');
+  const [highlightedOutputCode, setHighlightedOutputCode] = useState('');
 
   const defaultCodes = {
     python: `print("Hello World")`,
@@ -37,6 +51,20 @@ const CodeConverter = () => {
   useEffect(() => {
     setInputCode(defaultCodes[inputLang]);
   }, [inputLang]);
+
+  useEffect(() => {
+    highlightCode(inputCode, inputLang, setHighlightedInputCode);
+  }, [inputCode, inputLang]);
+
+  useEffect(() => {
+    highlightCode(outputCode, outputLang, setHighlightedOutputCode);
+  }, [outputCode, outputLang]);
+
+  const highlightCode = (code, language, setHighlightedCode) => {
+    const grammar = Prism.languages[language] || Prism.languages.javascript;
+    const highlighted = Prism.highlight(code, grammar, language);
+    setHighlightedCode(highlighted);
+  };
 
   const handleConvert = async () => {
     try {
@@ -107,6 +135,13 @@ const CodeConverter = () => {
                 value={inputCode}
                 onChange={(value) => setInputCode(value)}
               />
+
+              <div className="mt-4">
+                <h3 className="text-black font-bold mb-2">Highlighted Input Code:</h3>
+                <pre className="p-4 bg-gray-800 rounded-md overflow-x-auto max-h-[200px]">
+                  <code dangerouslySetInnerHTML={{ __html: highlightedInputCode }} />
+                </pre>
+              </div>
             </div>
 
             <div className="flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg bg-white">
@@ -143,6 +178,13 @@ const CodeConverter = () => {
                     <ClipLoader color="#ffffff" loading={true} size={50} />
                   </div>
                 )}
+              </div>
+
+              <div className="mt-4">
+                <h3 className="text-black font-bold mb-2">Highlighted Output Code:</h3>
+                <pre className="p-4 bg-gray-800 rounded-md overflow-x-auto max-h-[200px]">
+                  <code dangerouslySetInnerHTML={{ __html: highlightedOutputCode }} />
+                </pre>
               </div>
             </div>
           </div>
