@@ -3,6 +3,9 @@ import { Editor, loader } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
 import { FaMoon, FaSun } from 'react-icons/fa'; 
+import { ToastContainer, toast } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
+
 
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
@@ -41,7 +44,7 @@ const CodeConverter = () => {
   useEffect(() => {
     loader.init().then(monaco => {
       monaco.editor.defineTheme('off-white-theme', {
-        base: 'vs', // light base
+        base: 'vs', 
       inherit: true, 
       rules: [{ background: 'fafafa' }], 
       colors: {
@@ -57,6 +60,15 @@ const CodeConverter = () => {
   }, []);
 
   const handleConvert = async () => {
+    if (!inputCode.trim()) { // Check if inputCode is empty
+      toast.error('Input code cannot be empty!', { // Display error toast
+        position: "top-right", // Position the toast in the top right corner
+        className: isDarkMode ? 'dark-toast' : '', // Apply dark-toast class if in dark mode
+        autoClose: 2000, // Set the toast to close after 2 seconds
+      });
+      return; // Exit the function if input is empty
+    }
+    
     try {
       const requestData = {
         contents: [
@@ -182,6 +194,15 @@ const CodeConverter = () => {
           </div>
         </>
       )}
+      <ToastContainer /> {/* Add ToastContainer to render toasts */}
+      <style>
+        {`
+          .dark-toast {
+            background-color: black !important; /* Set background to black */
+            color: white !important; /* Set text color to white */
+          }
+        `}
+      </style>
     </div>
   );
 };
