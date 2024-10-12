@@ -98,16 +98,19 @@ const CodeConverter = () => {
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
-      <button onClick={toggleTheme} className="absolute top-4 right-4">
-        {isDarkMode ? <FaSun className="text-yellow-500" /> : <FaMoon className="text-gray-800" />}
+    <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 `}>
+      <div className="flex justify-end items-center w-full p-4">
+      <button onClick={toggleTheme} className=" ">
+        {isDarkMode ? <FaSun className="text-yellow-500" /> : <FaMoon className="text-white" />}
       </button>
+        
+      </div>
       { (
         <>
-          <h1 className={`text-3xl font-bold text-center p-2`}>Input Your Code</h1>
+          <h1 className={`text-3xl font-bold text-center p-2`}>Let's Begin</h1>
           <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
             <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
-              <label className={`font-bold mb-2`}>Input Language</label>
+              <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>Input Language</label>
               <select 
                 className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} p-2 mb-4 rounded-md`}
                 value={inputLang}
@@ -173,11 +176,11 @@ const CodeConverter = () => {
           </div>
 
           <div className="w-full flex justify-center"> 
-            <button 
-              className={`px-6 py-2 mb-3 md:mb-0 ${loading ? 'bg-gray-400' : isDarkMode ? 'bg-gray-600' : 'bg-blue-500'} border text-white font-semibold rounded-md`} 
-              onClick={handleConvert} 
+            
+            <button className="px-8 py-2 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 mb-4"
+            onClick={handleConvert} 
               disabled={loading}>
-              {loading ? 'Converting...' : 'Convert'}
+                  {loading ? 'Converting...' : 'Convert'}
             </button>
           </div>
         </>
