@@ -3,14 +3,13 @@ import { Editor, loader } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
 import { FaMoon, FaSun } from 'react-icons/fa'; 
-
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
   const [outputCode, setOutputCode] = useState('');
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); 
+  const [isDarkMode, setIsDarkMode] = useState(true); 
 
   const defaultCodes = {
     python: `print("Hello World")`,
@@ -100,15 +99,16 @@ const CodeConverter = () => {
   return (
     <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 `}>
       <div className="flex justify-end items-center w-full p-4">
+    
       <button onClick={toggleTheme} className=" ">
-        {isDarkMode ? <FaSun className="text-yellow-500" /> : <FaMoon className="text-white" />}
+        {isDarkMode ? <FaSun className="text-yellow-500 text-xl" /> : <FaMoon className="text-white text-xl" />}
       </button>
         
       </div>
       { (
         <>
           <h1 className={`text-3xl font-bold text-center p-2`}>Let's Begin</h1>
-          <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
+          <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 bg-transparent`}>
             <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
               <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>Input Language</label>
               <select 
@@ -177,7 +177,7 @@ const CodeConverter = () => {
 
           <div className="w-full flex justify-center"> 
             
-            <button className="px-8 py-2 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 mb-4"
+            <button className="px-8 py-2 rounded-full bg-[#26a3bc] text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 mb-4"
             onClick={handleConvert} 
               disabled={loading}>
                   {loading ? 'Converting...' : 'Convert'}
