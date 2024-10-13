@@ -1,16 +1,23 @@
-import CodeConverter from './CodeConverter'
-console.log(
-	"%cWhy are you looking at my logs 👀",
-	"color: #EEDD49; font-size: 10px;"
-);
-function App() {
+import React from 'react';  
+import CodeConverter from './CodeConverter';
+import HeroSection from './HeroSection';
 
-  return (
-    <div className='bg-black text-white'>
-      
-      <CodeConverter/>
-    </div>
-  )
+console.log(
+    "%cWhy are you looking at my logs 👀",
+    "color: #EEDD49; font-size: 10px;"
+);
+
+function App() {
+   
+
+    return (
+        <>
+           <HeroSection />
+            <div className='bg-[#020517]  text-white'>
+                <CodeConverter />
+            </div>
+        </>
+    );
 }
 
-export default App
+export default App;
