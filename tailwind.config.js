@@ -66,10 +66,16 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "wheel-up-down": {
+          '0%': { marginTop: '2px', opacity: '0' },
+          '30%': { opacity: '1' },
+          '100%': { marginTop: '20px', opacity: '0' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "wheel-up-down": "wheel-up-down 2s ease infinite",
       },
     },
   },
