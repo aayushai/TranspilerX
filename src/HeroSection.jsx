@@ -1,6 +1,7 @@
 import React from 'react'
 import { LampContainer } from './components/ui/lamp';
 import { motion } from "framer-motion";
+import MouseScroll from './components/ui/MouseScroll';
 
 const HeroSection =() => {
   return (
@@ -19,6 +20,11 @@ const HeroSection =() => {
      Transform Code<br/>  Unlock New Horizons
      
     </motion.h1>
+    <div 
+      className="fixed left-1/2 transform -translate-x-1/2" 
+      style={{ bottom: '100px', transform: 'translateY(900%)' }}>
+      <MouseScroll/>
+    </div>
   </LampContainer>
   )
 }
