@@ -59,8 +59,7 @@ const useShikiMonaco = () => {
   return { isReady, highlighter: highlighterRef.current };
 };
 
-import ClipLoader from "react-spinners/ClipLoader";
-import { FaMoon, FaSun } from 'react-icons/fa'; 
+
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
   const [outputCode, setOutputCode] = useState('');
