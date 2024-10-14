@@ -181,7 +181,7 @@ const CodeConverter = () => {
     <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 `}>
         <div className="flex justify-end items-center w-full p-4">
         <button onClick={toggleTheme}>
-        {isDarkMode ? <LightMode className="text-yellow-400 text-xl" /> : <DarkMode className="text-white text-xl" />}
+        {isDarkMode ? <LightMode className="text-yellow- 400 text-xl" /> : <DarkMode className="text-white text-xl" />}
       </button>
         
       </div>
