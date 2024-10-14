@@ -7,6 +7,8 @@ import { shikiToMonaco } from '@shikijs/monaco';
 import { createHighlighter } from 'shiki';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ContentCopy from '@mui/icons-material/ContentCopy';
+
 
 const useShikiMonaco = () => {
   const [isReady, setIsReady] = useState(false);
@@ -188,7 +190,7 @@ const CodeConverter = () => {
       </div>
       { (
         <>
-          <h1 className={`text-3xl font-bold text-center p-2`}>Let's Begin</h1>
+          <h1 className={`text-3xl font-semi-bold text-center p-2`}>Let's Begin</h1>
           <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 bg-transparent`}>
             <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
               <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>Input Language</label>
@@ -211,11 +213,11 @@ const CodeConverter = () => {
                   <option value="swift">Swift</option>
                 </select>
                 <button 
-                  className="ml-6 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
+                  className="ml-5 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
                   onClick={() => handleCopy(inputCode)}
-                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '8px' }}
+                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '10px' }}
                 >
-                  <FaCopy /> {/* Add the copy icon */}
+                  <ContentCopy /> {/* Add the copy icon */}
                 </button>
               </div>
 
@@ -269,11 +271,11 @@ const CodeConverter = () => {
                   <option value="swift">Swift</option>
                 </select>
                 <button 
-                  className="ml-6 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
+                  className="ml-5 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
                   onClick={() => handleCopy(outputCode)}
-                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '8px' }}
+                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '10px' }}
                 >
-                  <FaCopy /> {/* Add the copy icon */}
+                  <ContentCopy /> {/* Add the copy icon */}
                 </button>
               </div>
 
