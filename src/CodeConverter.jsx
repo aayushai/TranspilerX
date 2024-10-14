@@ -2,13 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Editor, loader } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { FaMoon, FaSun, FaCopy } from 'react-icons/fa';
 import { shikiToMonaco } from '@shikijs/monaco';
 import { createHighlighter } from 'shiki';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ContentCopy from '@mui/icons-material/ContentCopy';
-import { registerPythonSuggestions } from './suggestions/python';
+import { DarkMode, LightMode, ContentCopy } from '@mui/icons-material';import { registerPythonSuggestions } from './suggestions/python';
 import { registerRubySuggestions } from './suggestions/ruby';
 import { registerRustSuggestions } from './suggestions/rust';
 import { registerGoSuggestions } from './suggestions/go';
@@ -89,7 +87,7 @@ const CodeConverter = () => {
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const { isReady } = useShikiMonaco();
 
   const defaultCodes = {
@@ -202,10 +200,9 @@ const CodeConverter = () => {
 
   return (
     <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 `}>
-      <div className="flex justify-end items-center w-full p-4">
-    
-      <button onClick={toggleTheme} className=" ">
-        {isDarkMode ? <FaSun className="text-yellow-500 text-xl" /> : <FaMoon className="text-white text-xl" />}
+        <div className="flex justify-end items-center w-full p-4">
+        <button onClick={toggleTheme}>
+        {isDarkMode ? <LightMode className="text-yellow-500 text-xl" /> : <DarkMode className="text-white text-xl" />}
       </button>
         
       </div>
@@ -251,8 +248,8 @@ const CodeConverter = () => {
                 onChange={(value) => setInputCode(value)}
                 options={{
                   minimap: { enabled: false },
-                  scrollBeyondLastLine: false,
-                  fontSize: 14,
+                  scrollBeyondLastLine: true,
+                  fontSize: 16,
                   lineNumbers: 'on',
                   roundedSelection: false,
                   cursorStyle: 'line',
@@ -310,8 +307,8 @@ const CodeConverter = () => {
                   options={{
                     readOnly: true,
                     minimap: { enabled: false },
-                    scrollBeyondLastLine: false,
-                    fontSize: 14,
+                    scrollBeyondLastLine: true,
+                    fontSize: 16,
                     lineNumbers: 'on',
                     roundedSelection: false,
                     cursorStyle: 'line',
