@@ -68,7 +68,7 @@ const CodeConverter = () => {
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const { isReady } = useShikiMonaco();
 
   const defaultCodes = {
