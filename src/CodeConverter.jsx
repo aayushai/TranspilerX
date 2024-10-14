@@ -2,13 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Editor, loader } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { FaMoon, FaSun, FaCopy } from 'react-icons/fa';
 import { shikiToMonaco } from '@shikijs/monaco';
 import { createHighlighter } from 'shiki';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ContentCopy from '@mui/icons-material/ContentCopy';
-
+import { DarkMode, LightMode, ContentCopy } from '@mui/icons-material';
 
 const useShikiMonaco = () => {
   const [isReady, setIsReady] = useState(false);
@@ -181,10 +179,9 @@ const CodeConverter = () => {
 
   return (
     <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 `}>
-      <div className="flex justify-end items-center w-full p-4">
-    
-      <button onClick={toggleTheme} className=" ">
-        {isDarkMode ? <FaSun className="text-yellow-500 text-xl" /> : <FaMoon className="text-white text-xl" />}
+        <div className="flex justify-end items-center w-full p-4">
+        <button onClick={toggleTheme}>
+        {isDarkMode ? <LightMode className="text-yellow-500 text-xl" /> : <DarkMode className="text-white text-xl" />}
       </button>
         
       </div>
