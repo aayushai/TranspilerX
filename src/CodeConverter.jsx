@@ -59,16 +59,23 @@ const useShikiMonaco = () => {
   return { isReady, highlighter: highlighterRef.current };
 };
 
-
 const CodeConverter = () => {
-  const [inputCode, setInputCode] = useState('');
-  const [outputCode, setOutputCode] = useState('');
+  const [inputCode, setInputCode] = useState();
+  const [outputCode, setOutputCode] = useState();
   const [inputLang, setInputLang] = useState('python');
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { isReady } = useShikiMonaco();
 
+  useEffect(() => {
+    const savedLang = localStorage.getItem('SavedLang');
+    if (savedLang) {
+      const parsedLang = JSON.parse(savedLang);
+      setInputLang(parsedLang.InputLang || 'python');
+      setOutputLang(parsedLang.OutputLang || 'javascript');
+    }
+  }, []);
   const defaultCodes = {
     python: `print("Hello World")`,
     javascript: `console.log("Hello World")`,
@@ -90,6 +97,30 @@ const CodeConverter = () => {
   }`,
     swift: `print("Hello World")`,
   };
+function handleLanguageChange(e) {
+  const lang = e.target.value;
+
+  if (e.target.id === 'InputLanguage') {
+    setInputLang((prevInputLang) => {
+      const updatedLang = {
+        InputLang: lang,
+        OutputLang: outputLang, // Use the current outputLang
+      };
+      localStorage.setItem('SavedLang', JSON.stringify(updatedLang)); // Update localStorage
+      return lang; // Return the new input language
+    });
+  } else {
+    setOutputLang((prevOutputLang) => {
+      const updatedLang = {
+        InputLang: inputLang, // Use the current inputLang
+        OutputLang: lang,
+      };
+      localStorage.setItem('SavedLang', JSON.stringify(updatedLang)); // Update localStorage
+      return lang; // Return the new output language
+    });
+  }
+}
+
 
   useEffect(() => {
     setInputCode(defaultCodes[inputLang]);
@@ -174,22 +205,35 @@ const CodeConverter = () => {
   return (
     <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 `}>
       <div className="flex justify-end items-center w-full p-4">
-    
-      <button onClick={toggleTheme} className=" ">
-        {isDarkMode ? <FaSun className="text-yellow-500 text-xl" /> : <FaMoon className="text-white text-xl" />}
-      </button>
-        
+        <button onClick={toggleTheme} className=" ">
+          {isDarkMode ? (
+            <FaSun className="text-yellow-500 text-xl" />
+          ) : (
+            <FaMoon className="text-white text-xl" />
+          )}
+        </button>
       </div>
-      { (
+      {
         <>
           <h1 className={`text-3xl font-bold text-center p-2`}>Let's Begin</h1>
-          <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 bg-transparent`}>
-            <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
-              <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>Input Language</label>
-              <select 
-                className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} p-2 mb-4 rounded-md`}
+          <div
+            className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 bg-transparent`}
+          >
+            <div
+              className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${
+                isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
+              }`}
+            >
+              <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>
+                Input Language
+              </label>
+              <select
+                id="InputLanguage"
+                className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${
+                  isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
+                } p-2 mb-4 rounded-md`}
                 value={inputLang}
-                onChange={(e) => setInputLang(e.target.value)}
+                onChange={handleLanguageChange}
               >
                 <option value="javascript">JavaScript</option>
                 <option value="java">Java</option>
@@ -233,11 +277,12 @@ const CodeConverter = () => {
                 Output Language
               </label>
               <select
+                id="OutputLanguage"
                 className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${
                   isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
                 } p-2 mb-4 rounded-md`}
                 value={outputLang}
-                onChange={(e) => setOutputLang(e.target.value)}
+                onChange={handleLanguageChange}
               >
                 <option value="javascript">JavaScript</option>
                 <option value="java">Java</option>
@@ -282,17 +327,17 @@ const CodeConverter = () => {
             </div>
           </div>
 
-          <div className="w-full flex justify-center"> 
-            
-            <button className="px-8 py-2 rounded-full bg-[#26a3bc] text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 mb-4"
-            onClick={handleConvert} 
-              disabled={loading}>
-                  {loading ? 'Converting...' : 'Convert'}
+          <div className="w-full flex justify-center">
+            <button
+              className="px-8 py-2 rounded-full bg-[#26a3bc] text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 mb-4"
+              onClick={handleConvert}
+              disabled={loading}
+            >
+              {loading ? 'Converting...' : 'Convert'}
             </button>
           </div>
         </>
-     ) }
-
+      }
       <ToastContainer /> {/* Add ToastContainer to render toasts */}
       <style>
         {`
