@@ -1,21 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Editor, loader } from '@monaco-editor/react';
 import axios from 'axios';
-import ClipLoader from "react-spinners/ClipLoader";
-import { FaMoon, FaSun } from 'react-icons/fa';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { FaMoon, FaSun, FaCopy } from 'react-icons/fa';
+import { shikiToMonaco } from '@shikijs/monaco';
+import { createHighlighter } from 'shiki';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ContentCopy from '@mui/icons-material/ContentCopy';
 
-import { registerPythonSuggestions } from './suggestions/python';
-import { registerRubySuggestions } from './suggestions/ruby';
-import { registerRustSuggestions } from './suggestions/rust';
-import { registerGoSuggestions } from './suggestions/go';
-import { registerPHPSuggestions } from './suggestions/php';
-import { registerJavaSuggestions } from './suggestions/java';
-import { registerCSharpSuggestions } from './suggestions/csharp';
-import { registerCSuggestions } from './suggestions/c';
-import { registerCppSuggestions } from './suggestions/cpp';
-import { registerSwiftSuggestions } from './suggestions/swift';
+
+const useShikiMonaco = () => {
+  const [isReady, setIsReady] = useState(false);
+  const highlighterRef = useRef(null);
+
+  useEffect(() => {
+    const initializeShikiMonaco = async () => {
+      const monaco = await loader.init();
+      const highlighter = await createHighlighter({
+        themes: ['vitesse-dark', 'vitesse-light'],
+        langs: [
+          'javascript',
+          'typescript',
+          'python',
+          'java',
+          'cpp',
+          'c',
+          'csharp',
+          'ruby',
+          'rust',
+          'swift',
+        ],
+      });
+
+      highlighterRef.current = highlighter;
+
+      // Register languages
+      [
+        'javascript',
+        'typescript',
+        'python',
+        'java',
+        'cpp',
+        'c',
+        'csharp',
+        'ruby',
+        'rust',
+        'swift',
+      ].forEach((lang) => monaco.languages.register({ id: lang }));
+
+      // Register themes and provide syntax highlighting
+      shikiToMonaco(highlighter, monaco);
+
+      setIsReady(true);
+    };
+
+    initializeShikiMonaco();
+  }, []);
+
+  return { isReady, highlighter: highlighterRef.current };
+};
+
 
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
@@ -24,6 +69,7 @@ const CodeConverter = () => {
   const [outputLang, setOutputLang] = useState('javascript');
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isReady } = useShikiMonaco();
 
   const defaultCodes = {
     python: `print("Hello World")`,
@@ -45,16 +91,6 @@ const CodeConverter = () => {
     println!("Hello World");
   }`,
     swift: `print("Hello World")`,
-    go: `package main
-
-import "fmt"
-
-func main() {
-    fmt.Println("Hello World")
-}`,
-    php: `<?php
-  echo "Hello World";
-?>`
   };
 
   useEffect(() => {
@@ -62,9 +98,9 @@ func main() {
   }, [inputLang]);
 
   useEffect(() => {
-    loader.init().then(monaco => {
+    loader.init().then((monaco) => {
       monaco.editor.defineTheme('off-white-theme', {
-        base: 'vs',
+        base: 'vs', // light base
         inherit: true,
         rules: [{ background: 'fafafa' }],
         colors: {
@@ -74,30 +110,21 @@ func main() {
           'editorCursor.foreground': '#000000',
           'editorIndentGuide.background': '#e8e8e8',
           'editorLineNumber.foreground': '#b3b3b3',
-        }
+        },
       });
-
-      registerPythonSuggestions(monaco);
-      registerRubySuggestions(monaco);
-      registerRustSuggestions(monaco);
-      registerPHPSuggestions(monaco);
-      registerCSharpSuggestions(monaco);
-      registerCSuggestions(monaco);
-      registerGoSuggestions(monaco);
-      registerJavaSuggestions(monaco);
-      registerCppSuggestions(monaco);
-      registerSwiftSuggestions(monaco);
     });
-  }, []); 
+  }, []);
 
   const handleConvert = async () => {
     if (!inputCode.trim()) {
+      // Check if inputCode is empty
       toast.error('Input code cannot be empty!', {
-        position: "top-right",
-        className: isDarkMode ? 'dark-toast' : '',
-        autoClose: 2000,
+        // Display error toast
+        position: 'top-right', // Position the toast in the top right corner
+        className: isDarkMode ? 'dark-toast' : '', // Apply dark-toast class if in dark mode
+        autoClose: 2000, // Set the toast to close after 2 seconds
       });
-      return;
+      return; // Exit the function if input is empty
     }
 
     try {
@@ -106,20 +133,22 @@ func main() {
           {
             parts: [
               {
-                text: `Convert this ${inputLang} [${inputCode}] to ${outputLang}. Do not give explanation, just give the code.`
-              }
-            ]
-          }
-        ]
+                text: `Convert this ${inputLang} [${inputCode}] to ${outputLang}. Do not give explanation, just give the code.`,
+              },
+            ],
+          },
+        ],
       };
       setLoading(true);
       const response = await axios({
-        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${import.meta.env.VITE_API_KEY}`,
-        method: "post",
+        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${
+          import.meta.env.VITE_API_KEY
+        }`,
+        method: 'post',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        data: requestData
+        data: requestData,
       });
 
       if (response) {
@@ -136,84 +165,171 @@ func main() {
     }
   };
 
+  const handleCopy = (code) => {
+    navigator.clipboard.writeText(code).then(() => {
+      toast.success('Copied', { autoClose: 500 }); // Display toast for 0.5 seconds
+    });
+  };
+
+  if (!isReady) {
+    return <div>Loading editor...</div>;
+  }
+
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
-      <button onClick={toggleTheme} className="absolute top-4 right-4">
-        {isDarkMode ? <FaSun className="text-yellow-500" /> : <FaMoon className="text-gray-800" />}
+    <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 `}>
+      <div className="flex justify-end items-center w-full p-4">
+    
+      <button onClick={toggleTheme} className=" ">
+        {isDarkMode ? <FaSun className="text-yellow-500 text-xl" /> : <FaMoon className="text-white text-xl" />}
       </button>
-      <h1 className={`text-3xl font-bold text-center p-2`}>Input Your Code</h1>
-      <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
-        <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
-          <label className={`font-bold mb-2`}>Input Language</label>
-          <select
-            className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} p-2 mb-4 rounded-md`}
-            value={inputLang}
-            onChange={(e) => setInputLang(e.target.value)}>
-            <option value="javascript">JavaScript</option>
-            <option value="java">Java</option>
-            <option value="cpp">C++</option>
-            <option value="c">C</option>
-            <option value="python">Python</option>
-            <option value="csharp">C#</option>
-            <option value="ruby">Ruby</option>
-            <option value="typescript">TypeScript</option>
-            <option value="rust">Rust</option>
-            <option value="swift">Swift</option>
-            <option value="go">Go</option>
-            <option value="php">PHP</option>
-          </select>
-
-          <Editor
-            height="400px"
-            defaultLanguage={inputLang}
-            language={inputLang}
-            theme={isDarkMode ? "vs-dark" : "off-white-theme"}
-            value={inputCode}
-            onChange={(value) => setInputCode(value)}
-          />
-        </div>
-
-        <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
-          <label className={`text-black font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Output Language</label>
-          <select
-            className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} p-2 mb-4 rounded-md`}
-            value={outputLang}
-            onChange={(e) => setOutputLang(e.target.value)}>
-            <option value="javascript">JavaScript</option>
-            <option value="java">Java</option>
-            <option value="cpp">C++</option>
-            <option value="c">C</option>
-            <option value="python">Python</option>
-            <option value="csharp">C#</option>
-            <option value="ruby">Ruby</option>
-            <option value="typescript">TypeScript</option>
-            <option value="rust">Rust</option>
-            <option value="swift">Swift</option>
-            <option value="go">Go</option>
-            <option value="php">PHP</option>
-          </select>
-
-          <div className="relative h-[400px]">
-            <Editor
-              height="100%"
-              defaultLanguage={outputLang}
-              language={outputLang}
-              theme={isDarkMode ? "vs-dark" : "off-white-theme"}
-              value={outputCode}
-              options={{ readOnly: true }}
-            />
-          </div>
-        </div>
+        
       </div>
+      { (
+        <>
+          <h1 className={`text-3xl font-semi-bold text-center p-2`}>Let's Begin</h1>
+          <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 bg-transparent`}>
+            <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
+              <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>Input Language</label>
+              <div className="flex items-center">
+                <select 
+                  className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} p-1 mb-4 rounded-md`}
+                  value={inputLang}
+                  onChange={(e) => setInputLang(e.target.value)}
+                  style={{ width: '90%' }} 
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="java">Java</option>
+                  <option value="cpp">C++</option>
+                  <option value="c">C</option>
+                  <option value="python">Python</option>
+                  <option value="csharp">C#</option>
+                  <option value="ruby">Ruby</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="rust">Rust</option>
+                  <option value="swift">Swift</option>
+                </select>
+                <button 
+                  className="ml-5 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
+                  onClick={() => handleCopy(inputCode)}
+                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '10px' }}
+                >
+                  <ContentCopy /> {/* Add the copy icon */}
+                </button>
+              </div>
 
-      <button onClick={handleConvert} className={`w-40 py-2 rounded bg-blue-500 text-white hover:bg-blue-700 transition duration-300 ease-in-out`}>
-        {loading ? <ClipLoader size={20} color={"#fff"} /> : 'Convert'}
-      </button>
-      <ToastContainer />
+              <Editor
+                height="400px"
+                defaultLanguage={inputLang}
+                language={inputLang}
+                theme={isDarkMode ? 'vitesse-dark' : 'vitesse-light'}
+                value={inputCode}
+                onChange={(value) => setInputCode(value)}
+                options={{
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                  fontSize: 14,
+                  lineNumbers: 'on',
+                  roundedSelection: false,
+                  cursorStyle: 'line',
+                  automaticLayout: true,
+                }}
+              />
+            </div>
+
+            <div
+              className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${
+                isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
+              }`}
+            >
+              <label
+                className={`text-black font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}
+              >
+                Output Language
+              </label>
+              <div className="flex items-center">
+                <select
+                  className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${
+                    isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
+                  } p-1 mb-4 rounded-md`}
+                  value={outputLang}
+                  onChange={(e) => setOutputLang(e.target.value)}
+                  style={{ width: '90%' }} 
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="java">Java</option>
+                  <option value="cpp">C++</option>
+                  <option value="c">C</option>
+                  <option value="python">Python</option>
+                  <option value="csharp">C#</option>
+                  <option value="ruby">Ruby</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="rust">Rust</option>
+                  <option value="swift">Swift</option>
+                </select>
+                <button 
+                  className="ml-5 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
+                  onClick={() => handleCopy(outputCode)}
+                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '10px' }}
+                >
+                  <ContentCopy /> {/* Add the copy icon */}
+                </button>
+              </div>
+
+              <div className="relative h-[400px]">
+                <Editor
+                  height="100%"
+                  defaultLanguage={outputLang}
+                  language={outputLang}
+                  theme={isDarkMode ? 'vitesse-dark' : 'vitesse-light'}
+                  value={outputCode}
+                  options={{
+                    readOnly: true,
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    fontSize: 14,
+                    lineNumbers: 'on',
+                    roundedSelection: false,
+                    cursorStyle: 'line',
+                    automaticLayout: true,
+                  }}
+                />
+                {loading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75">
+                    <ClipLoader
+                      color={isDarkMode ? '#ffffff' : '#000000'}
+                      loading={true}
+                      size={50}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full flex justify-center"> 
+            
+            <button className="px-8 py-2 rounded-full bg-[#26a3bc] text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 mb-4"
+            onClick={handleConvert} 
+              disabled={loading}>
+                  {loading ? 'Converting...' : 'Convert'}
+            </button>
+          </div>
+        </>
+     ) }
+
+      <ToastContainer /> {/* Add ToastContainer to render toasts */}
+      <style>
+        {`
+          .dark-toast {
+            background-color: black !important; /* Set background to black */
+            color: white !important; /* Set text color to white */
+          }
+        `}
+      </style>
     </div>
   );
 };
