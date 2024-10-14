@@ -6,7 +6,17 @@ import { shikiToMonaco } from '@shikijs/monaco';
 import { createHighlighter } from 'shiki';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { DarkMode, LightMode, ContentCopy } from '@mui/icons-material';
+import { DarkMode, LightMode, ContentCopy } from '@mui/icons-material';import { registerPythonSuggestions } from './suggestions/python';
+import { registerRubySuggestions } from './suggestions/ruby';
+import { registerRustSuggestions } from './suggestions/rust';
+import { registerGoSuggestions } from './suggestions/go';
+import { registerPHPSuggestions } from './suggestions/php';
+import { registerJavaSuggestions } from './suggestions/java';
+import { registerCSharpSuggestions } from './suggestions/csharp';
+import { registerCSuggestions } from './suggestions/c';
+import { registerCppSuggestions } from './suggestions/cpp';
+import { registerSwiftSuggestions } from './suggestions/swift';
+
 
 const useShikiMonaco = () => {
   const [isReady, setIsReady] = useState(false);
@@ -34,6 +44,17 @@ const useShikiMonaco = () => {
       highlighterRef.current = highlighter;
 
       // Register languages
+      registerPythonSuggestions(monaco);
+      registerRubySuggestions(monaco);
+      registerRustSuggestions(monaco);
+      registerPHPSuggestions(monaco);
+      registerCSharpSuggestions(monaco);
+      registerCSuggestions(monaco);
+      registerGoSuggestions(monaco);
+      registerJavaSuggestions(monaco);
+      registerCppSuggestions(monaco);
+      registerSwiftSuggestions(monaco);
+      
       [
         'javascript',
         'typescript',
