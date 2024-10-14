@@ -212,7 +212,7 @@ const CodeConverter = () => {
                 </select>
                 <button 
                   className="ml-6 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
-                  onClick={() => handleCopy(outputCode)}
+                  onClick={() => handleCopy(inputCode)}
                   style={{ width: '40px', height: '40px', borderRadius: '8px' }} // Set fixed size and border radius for the button
                 >
                   <FaCopy /> {/* Add the copy icon */}
