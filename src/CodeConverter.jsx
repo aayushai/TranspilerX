@@ -213,7 +213,7 @@ const CodeConverter = () => {
                 <button 
                   className="ml-6 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
                   onClick={() => handleCopy(inputCode)}
-                  style={{ width: '40px', height: '40px', borderRadius: '8px' }} // Set fixed size and border radius for the button
+                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '8px' }}
                 >
                   <FaCopy /> {/* Add the copy icon */}
                 </button>
@@ -271,7 +271,7 @@ const CodeConverter = () => {
                 <button 
                   className="ml-6 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
                   onClick={() => handleCopy(outputCode)}
-                  style={{ width: '40px', height: '40px', borderRadius: '8px' }} // Set fixed size and border radius for the button
+                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '8px' }}
                 >
                   <FaCopy /> {/* Add the copy icon */}
                 </button>
