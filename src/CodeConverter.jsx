@@ -230,8 +230,8 @@ const CodeConverter = () => {
                 onChange={(value) => setInputCode(value)}
                 options={{
                   minimap: { enabled: false },
-                  scrollBeyondLastLine: false,
-                  fontSize: 14,
+                  scrollBeyondLastLine: true,
+                  fontSize: 16,
                   lineNumbers: 'on',
                   roundedSelection: false,
                   cursorStyle: 'line',
@@ -289,8 +289,8 @@ const CodeConverter = () => {
                   options={{
                     readOnly: true,
                     minimap: { enabled: false },
-                    scrollBeyondLastLine: false,
-                    fontSize: 14,
+                    scrollBeyondLastLine: true,
+                    fontSize: 16,
                     lineNumbers: 'on',
                     roundedSelection: false,
                     cursorStyle: 'line',
