@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Editor, loader } from '@monaco-editor/react';
 import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { FaMoon, FaSun } from 'react-icons/fa';
+import { FaMoon, FaSun, FaCopy } from 'react-icons/fa';
 import { shikiToMonaco } from '@shikijs/monaco';
 import { createHighlighter } from 'shiki';
 import { ToastContainer, toast } from 'react-toastify';
@@ -163,6 +163,12 @@ const CodeConverter = () => {
     }
   };
 
+  const handleCopy = (code) => {
+    navigator.clipboard.writeText(code).then(() => {
+      toast.success('Copied', { autoClose: 500 }); // Display toast for 0.5 seconds
+    });
+  };
+
   if (!isReady) {
     return <div>Loading editor...</div>;
   }
@@ -186,22 +192,32 @@ const CodeConverter = () => {
           <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 bg-transparent`}>
             <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
               <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>Input Language</label>
-              <select 
-                className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} p-2 mb-4 rounded-md`}
-                value={inputLang}
-                onChange={(e) => setInputLang(e.target.value)}
-              >
-                <option value="javascript">JavaScript</option>
-                <option value="java">Java</option>
-                <option value="cpp">C++</option>
-                <option value="c">C</option>
-                <option value="python">Python</option>
-                <option value="csharp">C#</option>
-                <option value="ruby">Ruby</option>
-                <option value="typescript">TypeScript</option>
-                <option value="rust">Rust</option>
-                <option value="swift">Swift</option>
-              </select>
+              <div className="flex items-center">
+                <select 
+                  className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} p-1 mb-4 rounded-md`}
+                  value={inputLang}
+                  onChange={(e) => setInputLang(e.target.value)}
+                  style={{ width: '90%' }} 
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="java">Java</option>
+                  <option value="cpp">C++</option>
+                  <option value="c">C</option>
+                  <option value="python">Python</option>
+                  <option value="csharp">C#</option>
+                  <option value="ruby">Ruby</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="rust">Rust</option>
+                  <option value="swift">Swift</option>
+                </select>
+                <button 
+                  className="ml-6 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
+                  onClick={() => handleCopy(inputCode)}
+                  style={{ width: '40px', height: '40px', borderRadius: '8px' }} // Set fixed size and border radius for the button
+                >
+                  <FaCopy /> {/* Add the copy icon */}
+                </button>
+              </div>
 
               <Editor
                 height="400px"
@@ -232,24 +248,34 @@ const CodeConverter = () => {
               >
                 Output Language
               </label>
-              <select
-                className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${
-                  isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
-                } p-2 mb-4 rounded-md`}
-                value={outputLang}
-                onChange={(e) => setOutputLang(e.target.value)}
-              >
-                <option value="javascript">JavaScript</option>
-                <option value="java">Java</option>
-                <option value="cpp">C++</option>
-                <option value="c">C</option>
-                <option value="python">Python</option>
-                <option value="csharp">C#</option>
-                <option value="ruby">Ruby</option>
-                <option value="typescript">TypeScript</option>
-                <option value="rust">Rust</option>
-                <option value="swift">Swift</option>
-              </select>
+              <div className="flex items-center">
+                <select
+                  className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${
+                    isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
+                  } p-1 mb-4 rounded-md`}
+                  value={outputLang}
+                  onChange={(e) => setOutputLang(e.target.value)}
+                  style={{ width: '90%' }} 
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="java">Java</option>
+                  <option value="cpp">C++</option>
+                  <option value="c">C</option>
+                  <option value="python">Python</option>
+                  <option value="csharp">C#</option>
+                  <option value="ruby">Ruby</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="rust">Rust</option>
+                  <option value="swift">Swift</option>
+                </select>
+                <button 
+                  className="ml-6 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
+                  onClick={() => handleCopy(outputCode)}
+                  style={{ width: '40px', height: '40px', borderRadius: '8px' }} // Set fixed size and border radius for the button
+                >
+                  <FaCopy /> {/* Add the copy icon */}
+                </button>
+              </div>
 
               <div className="relative h-[400px]">
                 <Editor
