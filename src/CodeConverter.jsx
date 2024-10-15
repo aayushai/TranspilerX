@@ -7,7 +7,7 @@ import { createHighlighter } from 'shiki';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { DarkMode, LightMode, ContentCopy } from '@mui/icons-material';
-
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 const useShikiMonaco = () => {
   const [isReady, setIsReady] = useState(false);
   const highlighterRef = useRef(null);
@@ -58,7 +58,6 @@ const useShikiMonaco = () => {
 
   return { isReady, highlighter: highlighterRef.current };
 };
-
 
 const CodeConverter = () => {
   const [inputCode, setInputCode] = useState('');
@@ -177,42 +176,86 @@ const CodeConverter = () => {
     setIsDarkMode(!isDarkMode);
   };
 
+  const options = [
+    'javascript',
+    'java',
+    'cpp',
+    'c',
+    'python',
+    'csharp',
+    'ruby',
+    'typescript',
+    'rust',
+    'swift',
+  ];
+
   return (
     <div className={`flex flex-col items-center justify-center min-h-screen space-y-6 `}>
-        <div className="flex justify-end items-center w-full p-4">
+      <div className="flex justify-end items-center w-full p-4">
         <button onClick={toggleTheme}>
-        {isDarkMode ? <LightMode className="text-yellow-400 text-xl" /> : <DarkMode className="text-white text-xl" />}
-      </button>
-        
+          {isDarkMode ? (
+            <LightMode className="text-yellow-400 text-xl" />
+          ) : (
+            <DarkMode className="text-white text-xl" />
+          )}
+        </button>
       </div>
-      { (
+      {
         <>
           <h1 className={`text-3xl font-semi-bold text-center p-2`}>Let's Begin</h1>
-          <div className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 bg-transparent`}>
-            <div className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
-              <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>Input Language</label>
-              <div className="flex items-center">
-                <select 
-                  className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} p-1 mb-4 rounded-md`}
-                  value={inputLang}
-                  onChange={(e) => setInputLang(e.target.value)}
-                  style={{ width: '90%' }} 
-                >
-                  <option value="javascript">JavaScript</option>
-                  <option value="java">Java</option>
-                  <option value="cpp">C++</option>
-                  <option value="c">C</option>
-                  <option value="python">Python</option>
-                  <option value="csharp">C#</option>
-                  <option value="ruby">Ruby</option>
-                  <option value="typescript">TypeScript</option>
-                  <option value="rust">Rust</option>
-                  <option value="swift">Swift</option>
-                </select>
-                <button 
+          <div
+            className={`flex flex-col md:flex-row w-[80%] space-x-0 md:space-x-4 space-y-4 md:space-y-0 bg-transparent`}
+          >
+            <div
+              className={`flex w-full md:w-[50%] flex-col p-4 shadow-md rounded-lg ${
+                isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
+              }`}
+            >
+              <label className={`font-bold mb-2  ${isDarkMode ? 'text-white' : 'text-black'} `}>
+                Input Language
+              </label>
+              <div className="flex items-center space-x-4">
+                <Menu as="div" className="relative inline-block text-left w-full">
+                  <MenuButton
+                    className={`border ${
+                      isDarkMode
+                        ? 'border-white bg-black text-white'
+                        : 'border-black bg-white text-black'
+                    } p-2 rounded-md w-full mb-3`}
+                  >
+                    {inputLang.charAt(0).toUpperCase() + inputLang.slice(1)}
+                  </MenuButton>
+
+                  <MenuItems
+                    className={`absolute mt-2 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md overflow-hidden z-10
+            ${isDarkMode ? 'text-white' : 'text-black'}`}
+                  >
+                    {options.map((option) => (
+                      <MenuItem key={option}>
+                        <button
+                          onClick={() => setInputLang(option)}
+                          className={`w-full text-left px-4 py-2 ${
+                            isDarkMode
+                              ? 'hover:bg-blue-500 bg-black text-white '
+                              : 'bg-white text-black hover:bg-blue-500'
+                          }`}
+                        >
+                          {option.charAt(0).toUpperCase() + option.slice(1)}
+                        </button>
+                      </MenuItem>
+                    ))}
+                  </MenuItems>
+                </Menu>
+
+                <button
                   className="ml-5 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
                   onClick={() => handleCopy(inputCode)}
-                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '10px' }}
+                  style={{
+                    backgroundColor: '#42a4bd',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '10px',
+                  }}
                 >
                   <ContentCopy /> {/* Add the copy icon */}
                 </button>
@@ -247,35 +290,52 @@ const CodeConverter = () => {
               >
                 Output Language
               </label>
-              <div className="flex items-center">
-                <select
-                  className={`border ${isDarkMode ? 'border-white' : 'border-black'} ${
-                    isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
-                  } p-1 mb-4 rounded-md`}
-                  value={outputLang}
-                  onChange={(e) => setOutputLang(e.target.value)}
-                  style={{ width: '90%' }} 
-                >
-                  <option value="javascript">JavaScript</option>
-                  <option value="java">Java</option>
-                  <option value="cpp">C++</option>
-                  <option value="c">C</option>
-                  <option value="python">Python</option>
-                  <option value="csharp">C#</option>
-                  <option value="ruby">Ruby</option>
-                  <option value="typescript">TypeScript</option>
-                  <option value="rust">Rust</option>
-                  <option value="swift">Swift</option>
-                </select>
-                <button 
+              <div className="flex items-center space-x-4">
+                <Menu as="div" className="relative inline-block text-left w-full">
+                  <MenuButton
+                    className={`border ${
+                      isDarkMode
+                        ? 'border-white bg-black text-white'
+                        : 'border-black bg-white text-black'
+                    } p-2 rounded-md w-full mb-3`}
+                  >
+                    {outputLang.charAt(0).toUpperCase() + outputLang.slice(1)}
+                  </MenuButton>
+
+                  <MenuItems
+                    className={`absolute mt-2 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md overflow-hidden z-10
+            ${isDarkMode ? 'text-white' : 'text-black'}`}
+                  >
+                    {options.map((option) => (
+                      <MenuItem key={option}>
+                        <button
+                          onClick={() => setOutputLang(option)}
+                          className={`w-full text-left px-4 py-2 ${
+                            isDarkMode
+                              ? 'hover:bg-blue-500 bg-black text-white '
+                              : 'bg-white text-black hover:bg-blue-500'
+                          }`}
+                        >
+                          {option.charAt(0).toUpperCase() + option.slice(1)}
+                        </button>
+                      </MenuItem>
+                    ))}
+                  </MenuItems>
+                </Menu>
+
+                <button
                   className="ml-5 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
-                  onClick={() => handleCopy(outputCode)}
-                  style={{ backgroundColor: '#42a4bd', width: '40px', height: '40px', borderRadius: '10px' }}
+                  onClick={() => handleCopy(inputCode)}
+                  style={{
+                    backgroundColor: '#42a4bd',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '10px',
+                  }}
                 >
                   <ContentCopy /> {/* Add the copy icon */}
                 </button>
               </div>
-
               <div className="relative h-[400px]">
                 <Editor
                   height="100%"
@@ -307,17 +367,17 @@ const CodeConverter = () => {
             </div>
           </div>
 
-          <div className="w-full flex justify-center"> 
-            
-            <button className="px-8 py-2 rounded-full bg-[#26a3bc] text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 mb-4"
-            onClick={handleConvert} 
-              disabled={loading}>
-                  {loading ? 'Converting...' : 'Convert'}
+          <div className="w-full flex justify-center">
+            <button
+              className="px-8 py-2 rounded-full bg-[#26a3bc] text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 mb-4"
+              onClick={handleConvert}
+              disabled={loading}
+            >
+              {loading ? 'Converting...' : 'Convert'}
             </button>
           </div>
         </>
-     ) }
-
+      }
       <ToastContainer /> {/* Add ToastContainer to render toasts */}
       <style>
         {`
