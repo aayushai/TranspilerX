@@ -89,10 +89,38 @@ const CodeConverter = () => {
   }`,
     swift: `print("Hello World")`,
   };
-
   useEffect(() => {
-    setInputCode(defaultCodes[inputLang]);
-  }, [inputLang]);
+    let saved = (JSON.parse(localStorage.getItem('SavedLang')) || {
+      Input: 'python',
+      Output: 'javascript',
+    });
+    setInputLang(saved.Input);
+    setInputCode(defaultCodes[saved.Input]);
+    setOutputLang(saved.Output);
+  },[]);
+
+function handleChange(langType, newLang) {
+  let updated = JSON.parse(localStorage.getItem('SavedLang')) || {
+    Input: 'python',
+    Output: 'javascript',
+  };
+  if (langType === 'input') {
+    setInputLang((prevInputLang) => {
+      updated.Input = newLang;
+      localStorage.setItem('SavedLang', JSON.stringify(updated)); // Update localStorage
+      setInputCode(defaultCodes[newLang]);
+      console.log('Lang Change');
+      return newLang; // Return the new input language
+    });
+  } else if (langType === 'output') {
+    setOutputLang((prevOutputLang) => {
+      updated.Output = newLang;
+      localStorage.setItem('SavedLang', JSON.stringify(updated)); // Update localStorage
+      setOutputCode(''); // After cahnging the output code refreshes the output code
+      return newLang; // Return the new output language
+    });
+  }
+}
 
   useEffect(() => {
     loader.init().then((monaco) => {
@@ -223,6 +251,7 @@ const CodeConverter = () => {
                         : 'border-black bg-white text-black'
                     } p-2 rounded-md w-full mb-3`}
                   >
+                    {console.log(inputLang)}
                     {inputLang.charAt(0).toUpperCase() + inputLang.slice(1)}
                   </MenuButton>
 
@@ -233,7 +262,8 @@ const CodeConverter = () => {
                     {options.map((option) => (
                       <MenuItem key={option}>
                         <button
-                          onClick={() => setInputLang(option)}
+                          onClick={() =>{handleChange('input', option);}
+                          }
                           className={`w-full text-left px-4 py-2 ${
                             isDarkMode
                               ? 'hover:bg-blue-500 bg-black text-white '
@@ -309,7 +339,8 @@ const CodeConverter = () => {
                     {options.map((option) => (
                       <MenuItem key={option}>
                         <button
-                          onClick={() => setOutputLang(option)}
+                          onClick={() =>{handleChange('output', option);}
+                          }
                           className={`w-full text-left px-4 py-2 ${
                             isDarkMode
                               ? 'hover:bg-blue-500 bg-black text-white '
