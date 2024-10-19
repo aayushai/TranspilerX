@@ -194,7 +194,7 @@ const CodeConverter = () => {
     }
   };
 
-  const handleCopy = (code) => {
+  const handleCopy = (code, field) => {
       if (!inputCode.trim()) {
       toast.error(`${fieldType} field is empty!`, {
         position: 'top-right',
