@@ -205,7 +205,7 @@ const handleCopy = (code, fieldType) => {
   }
 
   navigator.clipboard.writeText(code).then(() => {
-    toast.success(`${fieldType} copied!`, {
+    toast.success('Copied!', {
       autoClose: 2000,
       className: isDarkMode ? 'dark-toast' : '',
       position: 'top-right',
