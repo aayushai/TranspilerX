@@ -194,23 +194,30 @@ const CodeConverter = () => {
     }
   };
 
-  const handleCopy = (code, fieldType) => {
-      if (!inputCode.trim()) {
-      toast.error(`${fieldType} field is empty!`, {
-        position: 'top-right',
-        className: isDarkMode ? 'dark-toast' : '', 
-        autoClose: 2000, 
-      });
-      return;
-    }
-    navigator.clipboard.writeText(code).then(() => {
-      toast.success('Copied!', { 
-        autoClose: 2000,
-        className: isDarkMode ? 'dark-toast' : '',
-        position: 'top-right'
-        });
+const handleCopy = (code, fieldType) => {
+  if (!code || !code.trim()) {
+    toast.error(`${fieldType} field is empty!`, {
+      position: 'top-right',
+      className: isDarkMode ? 'dark-toast' : '',
+      autoClose: 2000,
     });
-  };
+    return;
+  }
+
+  navigator.clipboard.writeText(code).then(() => {
+    toast.success(`${fieldType} copied!`, {
+      autoClose: 2000,
+      className: isDarkMode ? 'dark-toast' : '',
+      position: 'top-right',
+    });
+  }).catch(err => {
+    console.error('Error copying text:', err);
+    toast.error('Failed to copy!', {
+      position: 'top-right',
+      autoClose: 2000,
+    });
+  });
+};
 
   if (!isReady) {
     return <div>Loading editor...</div>;
