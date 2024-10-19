@@ -148,14 +148,12 @@ const CodeConverter = () => {
 
   const handleConvert = async () => {
     if (!inputCode.trim()) {
-      // Check if inputCode is empty
       toast.error('Input code cannot be empty!', {
-        // Display error toast
-        position: 'top-right', // Position the toast in the top right corner
-        className: isDarkMode ? 'dark-toast' : '', // Apply dark-toast class if in dark mode
-        autoClose: 2000, // Set the toast to close after 2 seconds
+        position: 'top-right',
+        className: isDarkMode ? 'dark-toast' : '', 
+        autoClose: 2000,
       });
-      return; // Exit the function if input is empty
+      return;
     }
 
     try {
@@ -197,8 +195,20 @@ const CodeConverter = () => {
   };
 
   const handleCopy = (code) => {
+      if (!inputCode.trim()) {
+      toast.error(`${fieldType} field is empty!`, {
+        position: 'top-right',
+        className: isDarkMode ? 'dark-toast' : '', 
+        autoClose: 2000, 
+      });
+      return;
+    }
     navigator.clipboard.writeText(code).then(() => {
-      toast.success('Copied', { autoClose: 500 }); // Display toast for 0.5 seconds
+      toast.success('Copied!', { 
+        autoClose: 2000,
+        className: isDarkMode ? 'dark-toast' : '',
+        position: 'top-right'
+        });
     });
   };
 
@@ -285,7 +295,7 @@ const CodeConverter = () => {
 
                 <button
                   className="ml-5 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
-                  onClick={() => handleCopy(inputCode)}
+                  onClick={() => handleCopy(inputCode, 'Input')}
                   style={{
                     backgroundColor: '#42a4bd',
                     width: '40px',
@@ -363,7 +373,7 @@ const CodeConverter = () => {
 
                 <button
                   className="ml-5 mb-4 bg-gray-500 text-white rounded-md flex items-center justify-center"
-                  onClick={() => handleCopy(inputCode)}
+                  onClick={() => handleCopy(outputCode, 'Output')}
                   style={{
                     backgroundColor: '#42a4bd',
                     width: '40px',
